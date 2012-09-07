@@ -2,11 +2,17 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     lint: {
-      files: ['jquery.dashboard.js']
+      files: ['js/jquery.dashboard.js']
     },
     watch: {
       files: '<config:lint.files>',
       tasks: 'default'
+    },
+    min: {
+      dist: {
+        src: ['js/jquery.dashboard.js'],
+        dest: 'js/jquery.dashboard.min.js'
+      }
     },
     jshint: {
       options: {
