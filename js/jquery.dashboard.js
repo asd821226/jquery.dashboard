@@ -32,7 +32,7 @@
       var r = '{"layout": "' + dashboard.layout.id + '", "data" : [';
       // add al widgets in the right order
       var i=0;
-      if ($('.' + opts.columnClass).length == 0) dashboard.log(opts.columnClass  + ' class not found',5);
+      if ($('.' + opts.columnClass).length === 0) dashboard.log(opts.columnClass  + ' class not found',5);
       $('.' + opts.columnClass).each(function() {
         $(this).children().each(function() {
           if ($(this).hasClass(opts.widgetClass)) {
@@ -44,7 +44,7 @@
       });
       r+= ']}';
       return r;
-    }
+    };
 
     dashboard.log = function(msg, level) {
       if (level >= opts.debuglevel && typeof console != 'undefined') {
@@ -55,10 +55,10 @@
         if (level == 5) l = 'ERROR';
         console.log(l + ' - ' + msg);
       }
-    }
+    };
 
     dashboard.setLayout = function(layout) {
-      if (layout != null) {
+      if (layout !== null) {
         dashboard.log('entering setLayout function with layout ' + layout.id,1);
       } else {
         dashboard.log('entering setLayout function with layout null',1);
@@ -66,7 +66,7 @@
       dashboard.layout = layout;
 
       loading.remove();
-      if (dashboard.layout != null) {
+      if (dashboard.layout !== null) {
         if (typeof opts.layoutClass != 'undefined') {
           this.element.find('.' + opts.layoutClass).addClass(dashboard.layout.classname);
         } else {
@@ -100,7 +100,7 @@
           // This event is called for each column
           dashboard.log('Widget is dropped: check if the column is now empty.',1);
           var childLength = $(this).children().length;
-          if (childLength == 0) {
+          if (childLength === 0) {
             dashboard.log('adding the empty text to the column',1);
             $(this).html('<div class="emptycolumn">' + opts.emptyColumnHtml + '</div>');
           } else {
@@ -127,14 +127,14 @@
       // trigger the dashboardLayoutLoaded event
       dashboard.log('dashboardLayoutLoaded event thrown',2);
       dashboard.element.trigger("dashboardLayoutLoaded");
-    }
+    };
 
     // This is a workaround for the following problem: when I drag a widget from column2 to column1, sometimes the widget is
     // moved to column3, which is not visible
     function fixSortableColumns() {
       dashboard.log('entering fixSortableColumns function',1);
       $('.nonsortablecolumn').removeClass('nonsortablecolumn').addClass(opts.columnClass);
-      $('.' + opts.columnClass).filter(function() {return $(this).css("display") == 'none'}).addClass('nonsortablecolumn').removeClass(opts.columnClass);
+      $('.' + opts.columnClass).filter(function() {return $(this).css("display") === 'none';}).addClass('nonsortablecolumn').removeClass(opts.columnClass);
     }
 
     function getColumnIdentifier(classes) {
@@ -142,8 +142,8 @@
       var r;
       var s = classes.split(" ");
       for (var i = 0;i < s.length;i++) {
-        if (s[i].indexOf(opts.columnPrefix) === 0) { r = s[i] };
-      };
+        if (s[i].indexOf(opts.columnPrefix) === 0) { r = s[i]; }
+      }
       return r.replace(opts.columnPrefix,'');
     }
 
@@ -153,7 +153,7 @@
         // ajax option
         dashboard.log('Getting JSON feed : ' + opts.json_data.url,1);
         $.getJSON(opts.json_data.url, function(json) {
-          if (json == null) {
+          if (json === null) {
             alert('Unable to get json. If you are using chrome: there is an issue with loading json with local files. It works on a server :-)',5);
             return;
           }
@@ -175,10 +175,10 @@
       dashboard.log('entering addWidget function',1);
       // add the widget to the column
       var wid = obj.id;
-
+      var wi;
       // check if the widget is already registered and available in the dom
       if (typeof dashboard.widgets[wid] != 'undefined' && $('#' + wid).length > 0) {
-        var wi = $('#' + wid);
+        wi = $('#' + wid);
         column = dashboard.widgets[wid].column;
 
         // add it to the column
@@ -187,9 +187,9 @@
       } else {
         // build the widget
         dashboard.log('Applying template : ' + opts.widgetTemplate,1);
-        if ($('#' + opts.widgetTemplate).length == 0) dashboard.log('Template "' + opts.widgetTemplate + ' not found',5);
+        if ($('#' + opts.widgetTemplate).length === 0) dashboard.log('Template "' + opts.widgetTemplate + ' not found',5);
         var widgetStr = tmpl($('#' + opts.widgetTemplate).html(), obj);
-        var wi = $(widgetStr);
+        wi = $(widgetStr);
 
         // add it to the column
         wi.appendTo(column);
@@ -213,7 +213,7 @@
         dashboard.log('dashboardStateChange event thrown for widget ' + wid,2);
         dashboard.element.trigger("dashboardStateChange",{"stateChange":"widgetAdded","widget":wi});
       }
-    }
+    };
 
     dashboard.loadWidgets = function(data) {
       dashboard.log('entering loadWidgets function',1);
@@ -242,7 +242,7 @@
 
       // add the text to the empty columns
       $('.' + opts.columnClass).each(function() {
-        if ($(this).children().length == 0) {
+        if ($(this).children().length === 0) {
           $(this).html('<div class="emptycolumn">' + opts.emptyColumnHtml + '</div>');
         }
       });
@@ -254,7 +254,7 @@
       dashboard.log('entering init function',1);
       // load the widgets as fast as we can. After that add the binding
       dashboard.loadLayout();
-    }
+    };
 
     dashboard.getWidget = function(id) {
       dashboard.log('entering getWidget function',1);
@@ -264,7 +264,7 @@
       } else {
         return null;
       }
-    }
+    };
 
 
     // Merge in the caller's options with the defaults.
@@ -273,7 +273,7 @@
     var layoutOpts = $.extend({}, $.fn.dashboard.defaults.editLayoutSettings, options.editLayoutSettings);
 
     // Execution 'forks' here and restarts in init().  Tell the user we're busy with a loading.
-    var loading = $(opts.loadingHtml).appendTo(dashboard.element);
+    loading = $(opts.loadingHtml).appendTo(dashboard.element);
 
     /**
      * widget object
@@ -296,7 +296,7 @@
         widget.open = true;
         if (!widget.loaded) {
           // load the content in the widget if the state == open
-          if (this.url != '' && this.url != null && typeof this.url != 'undefined') {
+          if (this.url !== '' && this.url !== null && typeof this.url !== 'undefined') {
             // add the loading
             $(opts.loadingHtml).appendTo(widget.element.find('.' + opts.widgetContentClass));
 
@@ -333,7 +333,7 @@
         if (widget.open) {
           widget.openContent();
         }
-      }
+      };
       widget.setTitle = function(newTitle){
         dashboard.log('entering setTitle function',1);
         widget.title=newTitle;
@@ -342,7 +342,7 @@
           dashboard.log('dashboardStateChange event thrown for widget ' + widget.id,2);
           dashboard.element.trigger("dashboardStateChange",{"stateChange":"titleChanged","widget":widget});
         }
-      }
+      };
       widget.closeContent = function() {
         dashboard.log('entering closeContent function',1);
         widget.open = false;
@@ -388,17 +388,17 @@
         var r = '{"title" : "' + widget.title + '", "id" : "' + widget.id + '", "column" : "' + widget.column + '","editurl" : "' + widget.editurl + '","open" : ' + widget.open + ',"url" : "' + widget.url + '"';
 
         if (typeof widget.metadata != 'undefined') {
-          r+= ',"metadata":{'
+          r += ',"metadata":{';
           var obj = widget.metadata;
           var i=0;
           for(var item in obj) {
-            if (i > 0) { r+= ',' };
+            if (i > 0) { r+= ','; }
 
             // FIXME: support for more than string, eg numbers subobjects
             r+= '"' + item + '":"' + obj[item] + '"';
             i++;
           }
-          r+= '}'
+          r+= '}';
 
         }
 
@@ -450,7 +450,7 @@
       widget.element.trigger("widgetInitialized", {"widget":widget});
 
       return widget;
-    };
+    }
 
 
     // FIXME: can this be done easier??
@@ -461,13 +461,13 @@
       if (typeof opts.layouts != 'undefined') {
 
         $.each(opts.layouts,function(i, item) {
-          if (i == 0) { first = item; }
+          if (i === 0) { first = item; }
           if (item.id == id) {
             r = item;
           }
         });
       }
-      if (r == null) { r = first }
+      if (r === null) { r = first; }
       return r;
     }
 
@@ -507,7 +507,7 @@
       // use the class on the li to determine what action to trigger
       dashboard.log($(this).attr('class') + ' event thrown for widget ' + widget.id,2);
 
-      var wi = dashboard.getWidget($(this).closest('.' + opts.widgetClass).attr("id"));
+      wi = dashboard.getWidget($(this).closest('.' + opts.widgetClass).attr("id"));
       wi.element.trigger($(this).attr('class'), {"widget":wi});
       return false;
     });
@@ -601,7 +601,7 @@
       o.widget.openSettings();
     });
 
-    if ($('#' + addOpts.dialogId).length == 0) dashboard.log('Unable to find ' + addOpts.dialogId,5);
+    if ($('#' + addOpts.dialogId).length === 0) dashboard.log('Unable to find ' + addOpts.dialogId,5);
     $('#' + addOpts.dialogId).dialog({
       autoOpen: false,
       height: 514,
@@ -617,7 +617,7 @@
       }
     });
 
-    if ($('#' + layoutOpts.dialogId).length == 0) dashboard.log('Unable to find ' + layoutOpts.dialogId,5);
+    if ($('#' + layoutOpts.dialogId).length === 0) dashboard.log('Unable to find ' + layoutOpts.dialogId,5);
     $('#' + layoutOpts.dialogId).dialog({
       autoOpen: false,
       height: 300,
@@ -638,11 +638,11 @@
       // add the layout images
       var h = $('#' + layoutOpts.dialogId).find('.' + layoutOpts.layoutClass);
       h.empty();
-      if (h.children().length == 0) {
+      if (h.children().length === 0) {
         dashboard.log('Number of layouts : ' + opts.layouts.length,1);
         $.each(opts.layouts,function(i, item) {
           dashboard.log('Applying template : ' + layoutOpts.layoutTemplate,1);
-          if ($('#' + layoutOpts.layoutTemplate).length == 0) dashboard.log('Template "' + layoutOpts.layoutTemplate + ' not found',5);
+          if ($('#' + layoutOpts.layoutTemplate).length === 0) dashboard.log('Template "' + layoutOpts.layoutTemplate + ' not found',5);
           h.append(tmpl($('#' + layoutOpts.layoutTemplate).html(), item));
         });
       }
@@ -656,7 +656,7 @@
 
 
     dashboard.element.live('dashboardStateChange', function(){
-       if (typeof opts.stateChangeUrl != 'undefined' && opts.stateChangeUrl != null && opts.stateChangeUrl != '') {
+       if (typeof opts.stateChangeUrl !== 'undefined' && opts.stateChangeUrl !== null && opts.stateChangeUrl !== '') {
         $.ajax({type: 'POST',
           url: opts.stateChangeUrl,
           data: { dashboard: dashboard.element.attr("id"), settings: dashboard.serialize() },
@@ -686,7 +686,7 @@
 
     // FIXME: why doesn't the live construct work in this case
     function bindSelectLayout() {
-      if ($('.' + layoutOpts.selectLayoutClass).length == 0) dashboard.log('Unable to find ' + layoutOpts.selectLayoutClass,5);
+      if ($('.' + layoutOpts.selectLayoutClass).length === 0) dashboard.log('Unable to find ' + layoutOpts.selectLayoutClass,5);
       $('.' + layoutOpts.selectLayoutClass).bind('click', function(e){
         var currentLayout = dashboard.layout;
 
@@ -704,7 +704,7 @@
           fixSortableColumns();
 
           // check if there are widgets in hidden columns, move them to the first column
-          if ($('.' + opts.columnClass).length == 0) dashboard.log('Unable to find ' + opts.columnClass,5);
+          if ($('.' + opts.columnClass).length === 0) dashboard.log('Unable to find ' + opts.columnClass,5);
           dashboard.element.find('.nonsortablecolumn').each(function() {
             // move the widgets to the first column
             $(this).children().appendTo(dashboard.element.find('.' + opts.columnClass + ':first'));
@@ -712,7 +712,7 @@
             $('.emptycolumn').remove();
             // add the text to the empty columns
             $('.' + opts.columnClass).each(function() {
-              if ($(this).children().length == 0) {
+              if ($(this).children().length === 0) {
                 $(this).html('<div class="emptycolumn">' + opts.emptyColumnHtml + '</div>');
               }
             });
@@ -761,7 +761,7 @@
       dashboard.log('Getting JSON feed : ' + url,1);
       $.getJSON(url, {"cache":true}, function(json) {
         // load the widgets from the category
-        if (json.result.data == 0) dashboard.log('Empty data returned',3);
+        if (json.result.data === 0) dashboard.log('Empty data returned',3);
 
         var items = json.result.data;
 
@@ -773,7 +773,7 @@
           dashboard.widgetsToAdd[item.id] = item;
 
           dashboard.log('Applying template : ' + addOpts.widgetTemplate,1);
-          if ($('#' + addOpts.widgetTemplate).length == 0) dashboard.log('Template "' + addOpts.widgetTemplate + ' not found',5);
+          if ($('#' + addOpts.widgetTemplate).length === 0) dashboard.log('Template "' + addOpts.widgetTemplate + ' not found',5);
           var html = tmpl($('#' + addOpts.widgetTemplate).html(), item);
           $('#' + addOpts.dialogId).find('.' + addOpts.widgetClass).append(html);
         });
@@ -818,13 +818,13 @@
 
       dashboard.log('Getting JSON feed : ' + addOpts.widgetDirectoryUrl,1);
       $.getJSON(addOpts.widgetDirectoryUrl, function(json) {
-        if (json.category == 0) dashboard.log('Empty data returned',3);
+        if (json.category === 0) dashboard.log('Empty data returned',3);
         $.each(json.categories.category, function(i,item){
           // Add the categories to the dashboard
           dashboard.widgetCategories[item.id] = item.url;
 
           dashboard.log('Applying template : ' + addOpts.categoryTemplate,1);
-          if ($('#' + addOpts.categoryTemplate).length == 0) dashboard.log('Template "' + addOpts.categoryTemplate + ' not found',5);
+          if ($('#' + addOpts.categoryTemplate).length === 0) dashboard.log('Template "' + addOpts.categoryTemplate + ' not found',5);
           var html = tmpl($('#' + addOpts.categoryTemplate).html(),item);
           $('#' + addOpts.dialogId).find('.' + addOpts.categoryClass).append(html);
         });
